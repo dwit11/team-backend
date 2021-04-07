@@ -16,11 +16,11 @@ public class PurchaseOrder {
 
 	private String name;
 	private String address;
-	private String phone;
-	private String payment;
-	private Integer amount;
-	private String note;
+	private String tel;
+	private long pmt;
 	private String orderDate;
+	private String pay; // 결제 방법
+	private String note; // 요청사항
 
-	private List<PurchaseOrderProduct> orderProducts;
+	private List<PurchaseOrderDetail> salesOrderDetail;
 }

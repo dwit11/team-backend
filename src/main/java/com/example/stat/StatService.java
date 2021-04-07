@@ -1,5 +1,7 @@
 package com.example.stat;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,8 @@ public class StatService {
 	private SalesRepository salesRepo;
 
 	Random rand = new Random();
+	Date time = new Date();
+	SimpleDateFormat now = new SimpleDateFormat("yyyy-MM-dd");
 
 	@Autowired
 	public StatService(CartRepository cartRepo, ProductRepository productRepo, SalesRepository salesRepo) {
@@ -40,15 +44,19 @@ public class StatService {
 		Cart cart = new Gson().fromJson(data, Cart.class);
 		System.out.println("JSON : " + cart);
 
-		int price = cart.getCartProducts().get(0).getPrice();
-		String productName = cart.getCartProducts().get(0).getProduct().getName();
+		if (cart.getProduct().getProductCode() != null && cart.getProduct().getPrice() != 0
+				&& cart.getProduct().getName() != null) {
+			int price = cart.getProduct().getPrice();
+			String productName = cart.getProduct().getName();
+			String productCode = cart.getProduct().getProductCode();
 
-		AnalysisCart analysisCart = AnalysisCart.builder().productCode("P00000000").productName(productName)
-				.price(price).quantity(rand.nextInt(3) + 1).stock(rand.nextInt(9) + 1)
-				.numberMembers(rand.nextInt(9) + 1).numberNonMembers(0).build();
+			AnalysisCart analysisCart = AnalysisCart.builder().productCode(productCode).productName(productName)
+					.price(price).quantity(rand.nextInt(2) + 1).stock(rand.nextInt(150) + 100).numberMembers(1)
+					.numberNonMembers(0).build();
 
-		System.out.println(analysisCart);
-		cartRepo.save(analysisCart);
+			System.out.println(analysisCart);
+			cartRepo.save(analysisCart);
+		}
 	}
 
 	@KafkaListener(topics = "commerce.product", groupId = "etl")
@@ -58,22 +66,24 @@ public class StatService {
 		Product product = new Gson().fromJson(data, Product.class);
 		System.out.println("JSON : " + product);
 
-		// 판매 수량 = 결제수량 - 환불수량
-		int paymentQuantity = rand.nextInt(9) + 1;
-		int refundQuantity = rand.nextInt(2);
-		int salesQuantity = paymentQuantity - refundQuantity;
-		int price = product.getPrice();
-		String productName = product.getName();
-		String productCode = product.getProductCode();
-		String reDate = product.getReDate();
+		if (product.getPrice() != null && product.getName() != null && product.getProductCode() != null
+				&& product.getReDate() != null) {
+			int paymentQuantity = rand.nextInt(1);
+			int refundQuantity = rand.nextInt(paymentQuantity);
+			int salesQuantity = paymentQuantity - refundQuantity;
+			int price = product.getPrice();
+			String productName = product.getName();
+			String productCode = product.getProductCode();
+			String reDate = product.getReDate();
 
-		AnalysisProduct analysisProduct = AnalysisProduct.builder().reDate(reDate).dataUrl(null)
-				.productCode(productCode).productName(productName).price(price).stock(rand.nextInt(9) + 1)
-				.paymentQuantity(paymentQuantity).refundQuantity(refundQuantity).salesQuantity(salesQuantity)
-				.totalSales(price * salesQuantity).build();
-		System.out.println(analysisProduct);
+			AnalysisProduct analysisProduct = AnalysisProduct.builder().reDate(reDate).productCode(productCode)
+					.productName(productName).price(price).paymentQuantity(paymentQuantity)
+					.refundQuantity(refundQuantity).salesQuantity(salesQuantity).totalSales(price * salesQuantity)
+					.build();
 
-		productRepo.save(analysisProduct);
+			System.out.println(analysisProduct);
+			productRepo.save(analysisProduct);
+		}
 
 	}
 
@@ -84,21 +94,22 @@ public class StatService {
 		PurchaseOrder order = new Gson().fromJson(data, PurchaseOrder.class);
 		System.out.println("JSON : " + order);
 
-		int deliveryCharge = 2500;
-		int cashDiscount = order.getOrderProducts().get(0).getCashDiscount();
-		int coupon = 0;
-		int productPurchaseAmount = order.getAmount();
-		int totalPayment = productPurchaseAmount + deliveryCharge - cashDiscount - coupon;
-		String orderDate = order.getOrderDate();
+		if (order.getOrderDate() != null && order.getPmt() != 0) {
 
-		AnalysisSales analysisSales = AnalysisSales.builder().orderDate(orderDate).numberOrders(rand.nextInt(2) + 1)
-				.numberItems(rand.nextInt(3) + 1).productPurchaseAmount(productPurchaseAmount)
-				.deliveryCharge(deliveryCharge).cashDiscount(cashDiscount).coupon(coupon).totalPayment(totalPayment)
-				.totalRefund(0).netSales(totalPayment).build();
+			long deliveryCharge = 2500;
+			long cashDiscount = rand.nextInt(1) * 1000;
+			long coupon = rand.nextInt(3) * 1000;
+			long productPurchaseAmount = order.getPmt();
+			long totalPayment = productPurchaseAmount + deliveryCharge - cashDiscount - coupon;
 
-		System.out.println(analysisSales);
-		salesRepo.save(analysisSales);
+			AnalysisSales analysisSales = AnalysisSales.builder().orderDate(order.getOrderDate()).numberOrders(1)
+					.numberItems(rand.nextInt(3) + 1).productPurchaseAmount(productPurchaseAmount)
+					.deliveryCharge(deliveryCharge).cashDiscount(cashDiscount).coupon(coupon).totalPayment(totalPayment)
+					.totalRefund(0).netSales(totalPayment).build();
 
+			System.out.println(analysisSales);
+			salesRepo.save(analysisSales);
+		}
 	}
 
 }

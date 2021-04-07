@@ -20,13 +20,12 @@ public class AnalysisProduct {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 
-	private String dataUrl;
+//	private String dataUrl;
 	private String reDate; // 상품 등록일
 
 	private String productCode; // 상품코드
 	private String productName; // 상품명
 	private long price; // 판매가
-	private Integer stock; // 재고
 	private Integer paymentQuantity; // 결제수량
 	private Integer refundQuantity; // 환불수량
 	private Integer salesQuantity; // 판매수량

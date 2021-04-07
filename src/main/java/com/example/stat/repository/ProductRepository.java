@@ -39,7 +39,7 @@ public interface ProductRepository extends JpaRepository<AnalysisProduct, Long> 
 	@Query(value = " SELECT id, product_name AS productName, "
 			+ " price * (sum(payment_quantity - refund_quantity)) AS totalSales " + " FROM analysis_product  "
 			+ " WHERE DATE(re_date) BETWEEN :fromDate AND :toDate " + " GROUP BY product_code "
-			+ " ORDER BY total_Sales DESC limit 10 ", nativeQuery = true)
+			+ " ORDER BY totalSales DESC limit 10 ", nativeQuery = true)
 
 	public List<AnalysisProductTotalSales> getAnalysisProductTotalSales(@Param("fromDate") String fromDate,
 			@Param("toDate") String toDate);

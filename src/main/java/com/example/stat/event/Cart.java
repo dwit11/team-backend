@@ -1,7 +1,5 @@
 package com.example.stat.event;
 
-import java.util.List;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,5 +13,7 @@ public class Cart {
 	private long id;
 
 	private String userId;
-	private List<CartProduct> cartProducts;
+	private String amount;
+	private Product product;
+
 }

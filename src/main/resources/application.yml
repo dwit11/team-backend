@@ -1,18 +1,44 @@
 server:
   port: 9092
 
+eureka:
+  client:
+    service-url:
+      defaultZone: http://192.168.0.38:8761/eureka/
+  instance:
+    hostname: 192.168.0.36
+
 spring:
+  application:
+    name: statistics
+  profiles:
+    active: default    
   datasource:
-    url: jdbc:mysql://mysql-1.ciaw11pc2wlx.ap-northeast-2.rds.amazonaws.com/stat?useUnicode=true&characterEncoding=utf-8
+    url: jdbc:mysql://mysql-1.ciaw11pc2wlx.ap-northeast-2.rds.amazonaws.com/stat?useUnicode=true&characterEncoding=utf-8&rewriteBatchedStatements=true
     username: admin
     password: password123!
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     show-sql: true
     generate-ddl: true
+    properties:
+      hibernate:
+        '[generate_statistics]': true
+        '[order_inserts]': true
+        '[order_updates]': true
+        jdbc: 
+          '[batch_size]': 5 
+
   kafka:
     bootstrap-servers:
     - ec2-52-78-20-10.ap-northeast-2.compute.amazonaws.com:9092
 
-
-
+---     
+spring:
+  profiles: prod
+eureka:
+  client:
+    service-url:
+      defaultZone: 15.164.220.206:8761/eureka/
+  instance:
+    hostname: 52.78.20.10

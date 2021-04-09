@@ -1,5 +1,5 @@
 server:
-  port: 9092
+  port: 9009
 
 eureka:
   client:
@@ -39,6 +39,6 @@ spring:
 eureka:
   client:
     service-url:
-      defaultZone: 15.164.220.206:8761/eureka/
+      defaultZone: http://3.36.90.155:8761/eureka/
   instance:
     hostname: 52.78.20.10

@@ -45,9 +45,9 @@ public class StatService {
 		System.out.println("JSON : " + cart);
 
 		if (cart.getProduct().getProductCode() != null && cart.getProduct().getPrice() != 0
-				&& cart.getProduct().getName() != null) {
+				&& cart.getProduct().getProductName() != null) {
 			int price = cart.getProduct().getPrice();
-			String productName = cart.getProduct().getName();
+			String productName = cart.getProduct().getProductName();
 			String productCode = cart.getProduct().getProductCode();
 
 			AnalysisCart analysisCart = AnalysisCart.builder().productCode(productCode).productName(productName)
@@ -66,13 +66,13 @@ public class StatService {
 		Product product = new Gson().fromJson(data, Product.class);
 		System.out.println("JSON : " + product);
 
-		if (product.getPrice() != null && product.getName() != null && product.getProductCode() != null
+		if (product.getPrice() != null && product.getProductName() != null && product.getProductCode() != null
 				&& product.getReDate() != null) {
 			int paymentQuantity = rand.nextInt(1);
 			int refundQuantity = rand.nextInt(paymentQuantity);
 			int salesQuantity = paymentQuantity - refundQuantity;
 			int price = product.getPrice();
-			String productName = product.getName();
+			String productName = product.getProductName();
 			String productCode = product.getProductCode();
 			String reDate = product.getReDate();
 

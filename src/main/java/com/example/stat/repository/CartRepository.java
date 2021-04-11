@@ -6,15 +6,14 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import com.example.stat.entity.AnalysisCart;
-import com.example.stat.view.AnalysisCartMembers;
 import com.example.stat.view.AnalysisCartQuantity;
+import com.example.stat.view.AnalysisCartStock;
 
 public interface CartRepository extends JpaRepository<AnalysisCart, Long> {
-	@Query(value = " SELECT id, product_name AS productName, " + " sum(number_members + number_non_members) AS members "
-			+ " FROM analysis_cart " + " GROUP BY product_code " + " ORDER BY members "
-			+ " DESC limit 10 ", nativeQuery = true)
+	@Query(value = " SELECT id, product_name AS productName, " + " sum(quantity) AS quantity, stock "
+			+ " FROM analysis_cart " + " GROUP BY product_code " + " ORDER BY quantity DESC limit 10 " , nativeQuery = true)
 
-	public List<AnalysisCartMembers> getAnalysisCartMembers();
+	public List<AnalysisCartStock> getAnalysisCartStock();
 
 	@Query(value = " SELECT id, product_name AS productName, sum(quantity) AS quantity " + " FROM analysis_cart"
 			+ " GROUP BY product_code" + " ORDER BY quantity " + " DESC limit 10 ", nativeQuery = true)

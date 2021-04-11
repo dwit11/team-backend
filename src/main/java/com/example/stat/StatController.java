@@ -11,8 +11,8 @@ import com.example.stat.entity.AnalysisCart;
 import com.example.stat.repository.CartRepository;
 import com.example.stat.repository.ProductRepository;
 import com.example.stat.repository.SalesRepository;
-import com.example.stat.view.AnalysisCartMembers;
 import com.example.stat.view.AnalysisCartQuantity;
+import com.example.stat.view.AnalysisCartStock;
 import com.example.stat.view.AnalysisProductDate;
 import com.example.stat.view.AnalysisProductSalesQuantity;
 import com.example.stat.view.AnalysisProductTotalSales;
@@ -37,9 +37,9 @@ public class StatController {
 		return cartRepo.getAnalysisCart();
 	}
 
-	@GetMapping("/cart/top10/members")
-	public List<AnalysisCartMembers> getAnalysisCartMembers() {
-		return cartRepo.getAnalysisCartMembers();
+	@GetMapping("/cart/top10/stock")
+	public List<AnalysisCartStock> getAnalysisCartStock() {
+		return cartRepo.getAnalysisCartStock();
 	}
 
 	@GetMapping("/cart/top10/quantity")
